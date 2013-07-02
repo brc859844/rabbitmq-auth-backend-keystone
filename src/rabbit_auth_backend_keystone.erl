@@ -14,6 +14,8 @@
 %% Copyright (c) 2007-2013 VMware, Inc.  All rights reserved.
 %%
 
+%% Modified to authenticate against OpenStack Keystone (BRC 01-Jul-2013)
+
 -module(rabbit_auth_backend_keystone).
 -include("rabbit.hrl").
 
