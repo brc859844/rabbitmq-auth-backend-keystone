@@ -1,0 +1,9 @@
+%% -*- erlang -*-
+{application, rabbitmq_auth_backend_keystone,
+ [{description, "RabbitMQ OpenStack Keystone Authentication Backend"},
+  {vsn, "3.1.0"},
+  {modules, [rabbit_auth_backend_keystone_app]},
+  {registered, []},
+  {mod, {rabbit_auth_backend_keystone_app, []}},
+  {env, [{user_path,     "https://region-b.geo-1.identity.hpcloudsvc.com:35357/v2.0/tokens"}]},
+  {applications, [kernel, stdlib, inets, crypto, ssl, amqp_client]}]}.
