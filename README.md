@@ -45,5 +45,5 @@ Lastly it is necessary to activate the Keystone plugin in the usual fashion:
 The broker must then be restarted to pick up the new configuration. If things do not seem to be working correctly, check the RabbitMQ logs for messages containing "rabbit_auth_backend_keystone failed" or similar such text.
 
 #Versions
-The latest tagged version of the code works with (has been tested with) RabbitMQ 3.1.0 and Erlang 16B. The plugin should work with later versions of RabbitMQ and other reasonably recent version of Erlang. Testing was done using HP Cloud (http://www.hpcloud.com).
+The latest tagged version of the code works with (has been tested with) RabbitMQ 3.1.0 and Erlang 16B. The plugin should work with later versions of RabbitMQ and other reasonably recent versions of Erlang. Testing was done using HP Cloud (http://www.hpcloud.com); some tweaks might be required for other OpenStack deployments.
 
