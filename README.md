@@ -2,7 +2,7 @@ rabbitmq-auth-backend-keystone
 ==============================
 
 #Overview
-This plugin provides the ability for the RabbitMQ broker to perform authentication (determining who can log in) using the OpenStack Keystone identity service (specifically HP's variant thereof, http://docs.hpcloud.com/identity/). Authorization (determining what permissions users have) is still managed by the internal RabbitMQ authorization mechanism (this may change in future) and so users still need to be defined in the internal database; it is currently only authentication that uses Keystone.
+This plugin provides the ability for the RabbitMQ broker to perform authentication (determining who can log in) using the OpenStack Keystone identity service (or more specifically HP's variant thereof, http://docs.hpcloud.com/identity/). Authorization (determining what permissions users have) is still managed by the internal RabbitMQ authorization mechanism (this may change in future) and so users still need to be defined in the internal database; it is currently only authentication that uses Keystone.
 This provides a simple mechanism for OpenStack cloud tenants using RabbitMQ to provide other tenants with access to their RabbitMQ servers using a common authentication mechanism.
 The plugin is essentially just a simple modification of the default auth module.
 
