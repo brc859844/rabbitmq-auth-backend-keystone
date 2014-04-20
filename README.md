@@ -25,7 +25,7 @@ The configuration item auth_backends is a list of authentication providers to tr
 The following entry instructs RabbitMQ to use both the Keystone and the internal authentication providers, such that if a user cannot be authenticated via the Keystone plugin, then the internal provider will be tried.
 
     [{rabbit,
-       [{auth_backends, [rabbit_auth_backend_http, rabbit_auth_backend_internal]}]
+       [{auth_backends, [rabbit_auth_backend_keystone, rabbit_auth_backend_internal]}]
     }].
     
 Additionally, it is necessary to configure the plugin to know which URL to use for Keystone authentication. This may be done by adding the `rabbitmq_auth_backend_keystone` application to `rabbitmq.config` and setting the value of the configuration item `user_path` to the necessary URL, as illustrated below:
