@@ -1,7 +1,7 @@
 PACKAGE=rabbitmq-auth-backend-keystone
 DIST_DIR=dist
 EBIN_DIR=ebin
-INCLUDE_DIRS=include
+INCLUDE_DIRS=
 DEPS_DIR=deps
 DEPS ?= 
 DEPS_EZ=$(foreach DEP, $(DEPS), $(DEPS_DIR)/$(DEP).ez)
