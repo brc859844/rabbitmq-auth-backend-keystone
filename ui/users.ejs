@@ -11,7 +11,6 @@
       <th><%= fmt_sort('Name', 'name') %></th>
       <th><%= fmt_sort('Tags', 'tags') %></th>
       <th>Can access virtual hosts</th>
-      <th>Has password</th>
     </tr>
   </thead>
   <tbody>
@@ -24,7 +23,6 @@
          <td class="c"><%= fmt_string(user.tags) %></td>
          <td class="c"><%= fmt_permissions(user, permissions, 'user', 'vhost',
                            '<p class="warning">No access</p>') %></td>
-         <td class="c"><%= fmt_boolean(user.password_hash.length > 0) %></td>
        </tr>
     <% } %>
   </tbody>
@@ -46,7 +44,7 @@
       <input type="hidden" name="has-password" value="password"/>
       <table class="form">
         <tr>
-          <th><label>Username:</label></th>
+          <th><label>Keystone username:</label></th>
           <td>
             <input type="text" name="username"/>
             <span class="mand">*</span>
