@@ -47,3 +47,6 @@ The broker must then be restarted to pick up the new configuration. If things do
 #Versions
 The latest tagged version of the code works with (has been tested with) RabbitMQ 3.3.0 and Erlang 16B. The plugin should work with later versions of RabbitMQ and other reasonably recent versions of Erlang. Testing was done using HP Cloud (http://www.hpcloud.com); some tweaks might be required for other OpenStack deployments.
 
+# Changes to the management UI (optional)
+The `ui` directory includes modified versions of Management UI web pages associated with login and username/password management that are intended to be more intuitive to the user when Keystone-based authentication is being used. The script `./ui/install.sh` can be used to replace the relevant files in the management plugin `.ez` with the modified versions prior to plugin activation.
+
