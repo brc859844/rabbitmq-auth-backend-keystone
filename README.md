@@ -2,8 +2,7 @@ rabbitmq-auth-backend-keystone
 ==============================
 
 #Overview
-This plugin provides the ability for the RabbitMQ broker to perform authentication (determining who can log in) using the OpenStack Keystone identity service (or more specifically HP's variant thereof, http://docs.hpcloud.com/identity/). Authorization (determining what permissions users have) is still managed by the internal RabbitMQ authorization mechanism (this may change in future) and so users still need to be defined in the internal database; it is currently only authentication that uses Keystone.
-This provides a simple mechanism for OpenStack cloud tenants using RabbitMQ to provide other tenants with access to their RabbitMQ servers using a common authentication mechanism.
+This plugin provides the ability for the RabbitMQ broker to perform authentication (determining who can log in) using the OpenStack Keystone identity service. Authorization (determining what permissions users have) is currently still managed by the internal RabbitMQ authorization mechanism and so users still need to be defined in the internal database; it is currently only authentication that uses Keystone. This provides a simple mechanism for OpenStack cloud tenants using RabbitMQ to provide other tenants with access to their RabbitMQ servers using a common authentication mechanism. 
 The plugin is essentially just a simple modification of the default auth module.
 
 #Installation
@@ -47,6 +46,8 @@ The broker must then be restarted to pick up the new configuration. If things do
 #Versions
 The latest tagged version of the code works with (has been tested with) RabbitMQ 3.3.0 and Erlang 16B. The plugin should work with later versions of RabbitMQ and other reasonably recent versions of Erlang. Testing was done using HP Cloud (http://www.hpcloud.com); some tweaks might be required for other OpenStack deployments.
 
-# Changes to the management UI (optional)
+#Changes to the management UI (optional)
 The `ui` directory includes modified versions of Management UI web pages associated with login and username/password management that are intended to be more intuitive to the user when Keystone-based authentication is being used. The script `./ui/install.sh` can be used to replace the relevant files in the management plugin `.ez` with the modified versions prior to plugin activation.
 
+#Usage notes
+Once the plugin has been installed and configured, the administrator can define additional users and their permissions. This can be done via the command line using rabbitmqctl (assuming appropriate access to the host server) or via the RabbitMQ Management Web UI (or any other that uses the RabbitMQ Management REST API). Regardless of the approach, it is important to appreciate that the defined user names must exist in Keystone, and that any password specified when defining a new RabbitMQ user is meaningless, as users will be authenticated against Keystone using their existing Keystone username and password credentials. For this reason, provided with the plugin (see above) are a set of modified Management Web UI pages that do not require a password to be entered when setting up a new users, and the initial Web UI login page clearly indicates users should log into the UI using their Keystone credentials. In short, new RabbitMQ users should be defined as usual; however the specified usernames must exist in Keystone in order for the users to connect to RabbitMQ.   
