@@ -2,8 +2,9 @@ rabbitmq-auth-backend-keystone
 ==============================
 
 #Overview
-This plugin provides the ability for the RabbitMQ broker to perform authentication (determining who can log in) using the OpenStack Keystone identity service. Authorization (determining what permissions users have) is currently still managed by the internal RabbitMQ authorization mechanism and so users still need to be defined in the internal database; it is currently only authentication that uses Keystone. This provides a simple mechanism for OpenStack cloud tenants using RabbitMQ to provide other tenants with access to their RabbitMQ servers using a common authentication mechanism. 
-The plugin is essentially just a simple modification of the default auth module.
+This plugin provides the ability for the RabbitMQ broker to perform authentication (determining who can log in) using the OpenStack Keystone identity service. Authorization (determining what permissions users have) is currently still managed by the internal RabbitMQ authorization mechanism and so users still need to be defined in the internal database; it is currently only authentication that uses Keystone. This provides a simple mechanism for OpenStack cloud tenants using RabbitMQ to provide other tenants with access to their RabbitMQ servers using a common authentication mechanism. The plugin is essentially just a simple modification of the default auth module.
+
+The current version of the plugin uses the Keystone V3 API and is not compatible with earlier versions of the Keystone API. It shoudl be noted that the V3 API requires users to either specify a domain ID in addition to a username and password when authenticating or for there to be a default domain defined in Keystone for the athenticating user. If no default domain ID is defined, users must specify a domain ID when connecting to RabbitMQ by concatinating it with the username according to the syntax `domain-id\username`. If no default domain is defined in Keystone for the user and no domain ID is specified when logging in, an error will be returned by Keystone and the user will not be authenticated.
 
 #Installation
 To install from source:
@@ -32,7 +33,7 @@ Additionally, it is necessary to configure the plugin to know which URL to use f
     [
        {rabbit, [{auth_backends, [rabbit_auth_backend_keystone,rabbit_auth_backend_internal]}]},
        {rabbitmq_auth_backend_keystone,
-           [{user_path, "https://region-b.geo-1.identity.hpcloudsvc.com:35357/v2.0/tokens"}]}
+           [{user_path, "https://region-a.geo-1.identity.hpcloudsvc.com:35357/v3/auth/tokens"}]}
     ].
     
 Alternatively, the value for the URL may be specified in the plugins `rabbitmq_auth_backend_http.app` file (note that any value specified in `rabbitmq.config` as illustrated above will override any value specified in `rabbitmq_auth_backend_http.app`).
@@ -44,7 +45,9 @@ Lastly it is necessary to activate the Keystone plugin in the usual fashion:
 The broker must then be restarted to pick up the new configuration. If things do not seem to be working correctly, check the RabbitMQ logs for messages containing "rabbit_auth_backend_keystone failed" or similar such text. 
 
 #Versions
-The latest tagged version of the code works with (has been tested with) RabbitMQ 3.3.0 and Erlang 16B. The plugin should work with later versions of RabbitMQ and other reasonably recent versions of Erlang. Testing was done using HP Cloud (http://www.hpcloud.com); some tweaks might be required for other OpenStack deployments.
+The latest tagged version of the code works with (has been tested with) RabbitMQ 3.3.0 through 3.4.0 and Erlang 16B. The plugin should work with other versions of RabbitMQ and other reasonably recent versions of Erlang. Testing was done using HP Cloud (http://www.hpcloud.com); some tweaks might be required for other OpenStack deployments.
+
+As noted previously, the current version of the plugin uses the Keystone V3 API and is not compatible with earlier versions of the Keystone API. 
 
 #Changes to the management UI (optional)
 The `ui` directory includes modified versions of Management UI web pages associated with login and username/password management that are intended to be more intuitive to the user when Keystone-based authentication is being used. The script `./ui/install.sh` can be used to replace the relevant files in the management plugin `.ez` with the modified versions prior to plugin activation.

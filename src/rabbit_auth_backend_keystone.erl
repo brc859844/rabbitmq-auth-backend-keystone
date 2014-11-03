@@ -85,24 +85,40 @@
 
 %% Implementation of rabbit_auth_backend
 
+split_username(Username, N) ->
+    case string:str(Username, "\\") of
+        0 ->
+            [list_to_binary(Username)];
+        Pos ->
+            [list_to_binary(string:substr(Username, 1, Pos - 1)) | split_username(string:substr(Username, Pos + 1), N - 1)]
+    end.
+
 description() ->
     [{name, <<"Keystone">>},
      {description, <<"OpenStack Keystone authentication">>}].
 
 check_user_login(Username, [{password, Password}]) ->
-    U = binary_to_list(Username),
     P = binary_to_list(Password),
-    List = io_lib:format("{\"auth\":{\"passwordCredentials\":{\"username\":\"~s\",\"password\":\"~s\"}}}", [U, P]),
-    Data = lists:flatten(List),
+    [List, RabbitUsername] = case split_username(binary_to_list(Username), 2) of
+        [UserName] ->
+            U = binary_to_list(UserName),
+            [io_lib:format("{\"auth\":{\"identity\":{\"methods\":[\"password\"],\"password\":{\"user\":{\"name\":\"~s\",\"password\":\"~s\"}}}}}", [U, P]), UserName];
+        [DomainId, UserName] ->
+            D = binary_to_list(DomainId),
+            U = binary_to_list(UserName),
+            [io_lib:format("{\"auth\":{\"identity\":{\"methods\":[\"password\"],\"password\":{\"user\":{\"name\":\"~s\",\"password\":\"~s\"}}},\"scope\":{\"domain\":{\"id\":\"~s\"}}}}", 
+                            [U, P, D]), UserName]
+    end,
 
+    Data = lists:flatten(List),
     {ok, Path} = application:get_env(rabbitmq_auth_backend_keystone, user_path),
 
     case httpc:request(post, {Path, [], "application/json", Data}, [], []) of
         {ok, {{_Version, 401, _ReasonPhrase}, _Headers, _Body}} -> {refused, "Denied by Keystone plugin", []};
-        {ok, {{_Version, 200, _ReasonPhrase}, _Headers, _Body}} ->
-            case lookup_user(Username) of 
+        {ok, {{_Version, 201, _ReasonPhrase}, _Headers, _Body}} ->
+            case lookup_user(RabbitUsername) of 
                 {ok, User} ->
-                     {ok, #user{username     = Username,
+                     {ok, #user{username     = RabbitUsername,
                                 tags         = User#internal_user.tags,
                                 auth_backend = ?MODULE,
                                 impl         = none}};
