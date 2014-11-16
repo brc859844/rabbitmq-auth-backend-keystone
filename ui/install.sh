@@ -11,7 +11,6 @@ pushd /usr/lib/rabbitmq/lib/rabbitmq_server-$RABBITMQ_VERSION/plugins
 cp rabbitmq_management-$RABBITMQ_VERSION.ez rabbitmq_management-$RABBITMQ_VERSION.ez.original
 unzip rabbitmq_management-$RABBITMQ_VERSION.ez
 cp -f $DIR/*.ejs ./rabbitmq_management-$RABBITMQ_VERSION/priv/www/js/tmpl
-mv -f ./rabbitmq_management-$RABBITMQ_VERSION.ez ./rabbitmq_management-$RABBITMQ_VERSION.ez.bak
 zip -r -m rabbitmq_management-$RABBITMQ_VERSION.ez.cue rabbitmq_management-$RABBITMQ_VERSION
 #
 # Now let's tidy up after ourselves...
